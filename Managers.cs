@@ -9,9 +9,11 @@ public class Managers : MonoBehaviour
     static Managers Instance { get { Init();   return s_instance; } }//외부에서 GetInstance 호출 시 Init()으로 널체크 후 객체를 만들고 반환하는 형태로 돌아갈 것
                                                                       //외부에서 Manager인스턴스를 쓰고자 할 때 사용하게 될 함수
 
-    InputManager _input = new InputManager();
+    InputManager _input = new InputManager();//인풋매니저 생성자 선언
     public static InputManager Input { get { return Instance._input; } }
 
+    ResourceManager _resource = new ResourceManager();//리소스매니저 생성자 선언
+    public static ResourceManager Resource { get { return Instance._resource; } }
 
     //GetInstance()를 property형식으로 바꾸고자 하면
     //public static Managers Instance { get{Init(); return s_instance;} } 로 바꾼 후 Player에서 Managers mg = Mangers.Instance 형식으로 호출하면 됨
