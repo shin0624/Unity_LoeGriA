@@ -1,17 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCotroller : MonoBehaviour
 {
     [SerializeField]
     float _speed = 10.0f;//접근지정자를 public으로 하거나 SerializeField를 사용하면 인스펙터에서 속도값을 수정 가능
-   // float _yAngle = 0.0f;//로테이션 조작을 위한 변수 생성
-    
+                         // float _yAngle = 0.0f;//로테이션 조작을 위한 변수 생성
+
+    bool _moveToDest = false;//_desPos 사용 여부(목적지로 이동하는지)
+    Vector3 _destPos;//목적지
+
+
     void Start()
     {
         Managers.Input.KeyAction -= OnKeyboard;//중복 호출을 방지하기 위한 마이너스
         Managers.Input.KeyAction += OnKeyboard;
+
+        Managers.Input.MouseAction -= OnMouseClicked;
+        Managers.Input.MouseAction += OnMouseClicked;
     }
 
     // 업데이트 메서드는 프레임 당 한번씩, 즉 1/60초마다 한번씩 실행되므로
@@ -19,6 +27,8 @@ public class PlayerCotroller : MonoBehaviour
     //시간 * 속도 = 거리 를 이용
     void Update()
     {
+
+#if WASD_Move_1
         //전후좌우 이동 : new Vector3(0.0f, 0.0f, 1.0f) 사용 또는 예약어 사용(월드좌표계)  
         // 로컬 좌표계(Player의 시선을 기준으로 한 전후좌우 : transform.TransformDirection(로컬->월드)
         //(월드->로컬) : InverseTransformDirection
@@ -54,7 +64,26 @@ public class PlayerCotroller : MonoBehaviour
 
         //전후좌우 GetKey if문을 수정
 
+#endif
 
+        if (_moveToDest)
+        {
+            Vector3 dir = _destPos - transform.position;//Click한 목적지 좌표 - Player좌표 = 이동할 방향벡터(방향+거리)
+            if(dir.magnitude < 0.0001f)
+            {
+                _moveToDest = false;//Player가 destPos로 도착하면 다시 moveToDest를 false로 바꾼다.
+            }
+            else
+            {
+                float moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude); //-->연산하는 거리가, 현재 Player와 destPos 간 거리보다 적어야함을 보장하는 Clamp(value, min, max)-->value값 정도에 따라 min,max로 자동조절
+                //transform.position+= dir.normalized* _speed * Time.deltaTime;//(거리 = 속도*시간)
+                transform.position+= dir.normalized* moveDist;
+
+                transform.LookAt(_destPos);//이동할 때 destPos 방향으로 시선 고정
+            }
+        
+        
+        }
 
     }
 
@@ -81,5 +110,31 @@ public class PlayerCotroller : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.1f);
             transform.position += Vector3.right * Time.deltaTime * _speed;
         }
+
+        _moveToDest = false;//키보드로 조작할 때는 마우스 클릭으로 이동처럼 destPos를 정하고 움직이지 않으므로 false.
+
+    }
+
+    void OnMouseClicked(Define.MouseEvent evt)//InputManager 스크립트에서 Action<Define.MouseEvent> MouseAction 으로 선언하였으므로, 마우스이벤트 객체를 인자로 넘겨줌
+    {
+        if (evt != Define.MouseEvent.Click)//들어온 이벤트가 Click이 아니면 무시
+            return;
+
+        //--TestCollision에서 이동한 Raycasting 부분 --->LOL처럼, 마우스로 바닥을 클릭하면 클릭한 곳을 destPos로 하여 그곳까지 Player를 움직이게 할 것임.
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+        RaycastHit hit;
+      
+        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))//인자에 LayerMask를 바로 추가
+        {
+           
+            _destPos = hit.point;//hit.point = Ray가 Hit한 컬라이더의 월드좌표. 이를 목적지로 하여 Player를 이동시킬 것
+            _moveToDest = true;
+            //-->Update()에서 목적지로 이동시키면 된다.
+        }
+
+
     }
 }
