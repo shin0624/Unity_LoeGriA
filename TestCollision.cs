@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class TestCollision : MonoBehaviour
@@ -26,16 +27,16 @@ public class TestCollision : MonoBehaviour
         //2. 둘 중 하나는 isTrigger : on
         //3. 둘 중 하나는 RigidBody가 있어야 함
     }
-    // Start is called before the first frame update
+   
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
- #if Raycast
+#if Raycast
         //RayCasting
 
         //Vector3.forward를 쓰면 z방향 한방향으로만 Ray가 발사되므로, Player가 바라보는 방향으로 Ray를 쏘기 위해 로컬좌표를 월드좌표로 변환해본다
@@ -70,14 +71,14 @@ public class TestCollision : MonoBehaviour
              Debug.Log($"RayCast{hit.collider.gameObject.name}!");
         }
         //RayCast 응용 : Player와 카메라 사이가 벽으로 막혀있을 때-->Ray를 쏘아 벽에 닿으면 카메라 위치를 벽보다 Player에게 가까이 할 수 있음 
-                    #endif
+#endif
 
         //Local <-> World <-> ViewPoint <-> Screen(Pixel) 좌표계 간 변환 --->3인칭 게임에서 마우스 클릭한 위치로 Player를 이동시키고 싶을 때 사용
 
 #if Raycast2
         if (Input.GetMouseButtonDown(0))
         {
-             Debug.Log(Input.mousePosition);//마우스 포인터가 가리키는 위치를 픽셀좌표(스크린 상 좌표)로 변환. 스크린 좌표는 x,y만 갖고있으므로 z축 값은 항상 0
+            // Debug.Log(Input.mousePosition);//마우스 포인터가 가리키는 위치를 픽셀좌표(스크린 상 좌표)로 변환. 스크린 좌표는 x,y만 갖고있으므로 z축 값은 항상 0
             Debug.Log(Camera.main.ViewportToScreenPoint(Input.mousePosition));//마우스 포인터가 가리키는 좌표를 뷰포인트(0~1사이 비율)로 변환. 스크린과 유사
             Vector3 mouspos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));//스크린 상 좌표를 월드 좌표로 변환. Vector3객체에는 x,y 마우스위치, 메인카메라의 Near값(카메라와 절두체 사이 위치-->근거리)을 인자로 하여 넘겨줌
             Vector3 dir = mouspos - Camera.main.transform.position;//마우스 위치 - 카메라 위치 = 카메라 위치에서 절두체로 가는 방향벡터
@@ -94,9 +95,10 @@ public class TestCollision : MonoBehaviour
 
 #endif
         //Ray와 ScreenPointToRay를 사용하는 법
-
+#if Raycast3
         if (Input.GetMouseButtonDown(0))
         {
+           
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
@@ -105,6 +107,42 @@ public class TestCollision : MonoBehaviour
             {
                 Debug.Log($"RayCast Camera @{hit.collider.gameObject.name}");
             }
+
+        }
+#endif
+
+        //특정 레이어만 Raycast되도록 하는 법 (1) 비트 shift연산
+#if Raycast4
+        int mask = (1 << 8);//8비트 Shift연산-->Layer 8번 "Monster"를 적용한 물체에만 레이캐스팅이 걸리도록 표현. 레이어는 int32형이므로 8번째인 monster레이어에만 적용되도록.
+        //9번 레이어를 Wall로 설정하고 바닥(Plain)에 적용했으니, monster, wall 두 레이어에 레이캐스팅 결과를 출력하고자 한다면 int mask = (1 << 8) | (1<<9) 와 같이 OR을 사용
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100.0f, mask))//인자에 mask 추가
+            {
+                Debug.Log($"RayCast Camera @{hit.collider.gameObject.name}");
+            }//-->바닥에 Ray를 쏘았을 때는 아무것도 출력x / monster레이어를 적용한 cube1,cube2를 레이캐스팅했을 때에만 로그가 출력됨
+
+        }
+#endif
+
+        //특정 레이어만 Raycast되도록 하는 법 (2) LayerMask 형 선언
+        LayerMask mask = LayerMask.GetMask("Monster");//레이어마스크 형 mask를 선언 후 GetMask()함수로 레이어 이름을 적어도 됨(OR문 적용도 가능)
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100.0f, mask))//인자에 mask 추가
+            {
+                Debug.Log($"RayCast Camera @{hit.collider.gameObject.name}");
+            }//-->바닥에 Ray를 쏘았을 때는 아무것도 출력x / monster레이어를 적용한 cube1,cube2를 레이캐스팅했을 때에만 로그가 출력됨
 
         }
     }
