@@ -12,6 +12,7 @@ public class PlayerCotroller : MonoBehaviour
     bool _moveToDest = false;//_desPos 사용 여부(목적지로 이동하는지)
     Vector3 _destPos;//목적지
 
+    float wait_run_ratio = 0;
 
     void Start()
     {
@@ -87,6 +88,22 @@ public class PlayerCotroller : MonoBehaviour
         
         
         }
+        //애니메이션 적용
+
+        if (_moveToDest)//Player가 dest까지 움직이고 있다면
+        {
+            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);//Lerp함수를 이용하여 Player움직임을 부드럽게 표현-->변수 wait_run_ratio가 10.0f * deltatime의 간격으로 조금씩 1에 가까워져 RUN 상태로.
+            Animator anim = GetComponent<Animator>();//GetComponent로 Animator를 가져온다
+            anim.SetFloat("wait_run_ratio", wait_run_ratio);//애니메이터에서 wait_run_ratio라는 이름으로 블렌딩한 파라미터(float)를 세트시켜준다. 1에 가까울수록 RUN애니메이션 실행
+            anim.Play("WAIT_RUN");
+        }
+        else
+        {
+            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);//Lerp함수를 이용하여 Player움직임을 부드럽게 표현-->변수 wait_run_ratio가 10.0f * deltatime의 간격으로 조금씩 0에 가까워져 WAIT상태로.
+            Animator anim = GetComponent<Animator>();//GetComponent로 Animator를 가져온다
+            anim.SetFloat("wait_run_ratio", wait_run_ratio);//애니메이터에서 wait_run_ratio라는 이름으로 블렌딩한 파라미터(float)를 세트시켜준다. 0에 가까울수록 WAIT애니메이션 실행--->Player의 움직임이 더 부드러워질 것.
+            anim.Play("WAIT_RUN");
+        }
 
     }
 
@@ -120,8 +137,9 @@ public class PlayerCotroller : MonoBehaviour
 
     void OnMouseClicked(Define.MouseEvent evt)//InputManager 스크립트에서 Action<Define.MouseEvent> MouseAction 으로 선언하였으므로, 마우스이벤트 객체를 인자로 넘겨줌
     {
-        if (evt != Define.MouseEvent.Click)//들어온 이벤트가 Click이 아니면 무시
-            return;
+        //---마우스 클릭, 클릭 유지 중에도 달리는 애니메이션이 재생될 수 있도록 주석처리
+        //if (evt != Define.MouseEvent.Click)// 들어온 이벤트가 Click이 아니면 무시
+        //    return;
 
         //--TestCollision에서 이동한 Raycasting 부분 --->LOL처럼, 마우스로 바닥을 클릭하면 클릭한 곳을 destPos로 하여 그곳까지 Player를 움직이게 할 것임.
 
