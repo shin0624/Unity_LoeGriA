@@ -79,7 +79,10 @@ public class PlayerCotroller : MonoBehaviour
                 //transform.position+= dir.normalized* _speed * Time.deltaTime;//(거리 = 속도*시간)
                 transform.position+= dir.normalized* moveDist;
 
-                transform.LookAt(_destPos);//이동할 때 destPos 방향으로 시선 고정
+
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);//만약 Player회전이 느리다면 상수값을 20정도로 늘림
+
+                //transform.LookAt(_destPos);//이동할 때 destPos 방향으로 시선 고정
             }
         
         
