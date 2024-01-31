@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager//싱글톤으로 구현된 Managers가 이미 있으므로 InputManager는 일반 스크립트로 생성
 {
@@ -11,7 +12,11 @@ public class InputManager//싱글톤으로 구현된 Managers가 이미 있으므로 InputManag
     bool _pressed = false;//마우스 버튼 눌림 유무
 
     public void OnUpdate()
-    { 
+    {
+        if (EventSystem.current.IsPointerOverGameObject())//UI버튼 클릭 여부 판단을 위해 EventSystem을 사용한 조건 추가
+            return;//UI가 클릭된 상황이면 바로 리턴(게임 화면 내 UI버튼 클릭 시 캐릭터 이동으로 간주되지 않도록)
+       
+
         if (Input.anyKey && KeyAction != null)
         {
             KeyAction.Invoke();
