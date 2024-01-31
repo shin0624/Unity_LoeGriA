@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class Util//기능성 함수들을 관리하는 스크립트 
 {
+    public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)//GameObject 타입 전용 메서드-->실행 로직은 동일하므로 코드 재사용
+    {
+        Transform transform = FindChild<Transform>(go, name, recursive);//GameObject는 transform을 갖고 있으므로, transform이 null이면 null리턴, 아니면 transform.gameObject를 리턴
+        if (transform == null)
+            return null;
+
+        return transform.gameObject;
+    }
+
     //최상위 객체와 이름을 받음, 만약 이름을 입력하지 않으면 이름 비교x, 타입에 해당하면 리턴,recursive : 자식을 찾을 때 하위 자식 하나만 찾을 것인지 자식의 자식까지 재귀적으로 찾을 것인지 여부
     public static T FindChild<T>(GameObject go, string name = null, bool recursive = false) where T : UnityEngine.Object//유니티오브젝트만 찾을 것임을 조건으로 명시
     {// T : Button, Text 등 찾고자하는 컴포넌트
