@@ -5,6 +5,16 @@ using UnityEngine;
 
 public class Util//기능성 함수들을 관리하는 스크립트 
 {
+    public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
+    {
+        // 어떤 오브젝트에게 이벤트를 붙일지 모르니, 오브젝트에 UI_EventHandler가 없다면 추가해주는 구문이 필요
+        T component = go.GetComponent<T>();
+        if (component == null)
+            component = go.AddComponent<T>();
+        return component;
+    }
+
+
     public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)//GameObject 타입 전용 메서드-->실행 로직은 동일하므로 코드 재사용
     {
         Transform transform = FindChild<Transform>(go, name, recursive);//GameObject는 transform을 갖고 있으므로, transform이 null이면 null리턴, 아니면 transform.gameObject를 리턴

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크립트(UI_Button에서 작성했던 내용 이전)
@@ -48,4 +49,24 @@ public class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크립트(UI_B
     protected Button GetButton(int idx) { return Get<Button>(idx); }
 
     protected Image GetImage(int idx) { return Get<Image>(idx); }
+
+    public static void AddUIEvent(GameObject go, Action<PointerEventData>action, Define.UIEvent type = Define.UIEvent.Click)//UI이벤트를 추가하는 함수 선언-->게임오브젝트, 콜백으로 연동할 Action함수, 어떤 UIEvent에 적용할 것인지를 인자로 지정(기본 click)
+    {
+        // 어떤 오브젝트에게 이벤트를 붙일지 모르니, 오브젝트에 UI_EventHandler가 없다면 추가해주는 구문이 필요
+        UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
+
+        switch (type)
+        {
+            case Define.UIEvent.Click:
+                evt.OnClickHandler -= action;
+                evt.OnClickHandler += action;
+                break;
+            case Define.UIEvent.Drag:
+                evt.OnDragHandler -= action;
+                evt.OnDragHandler += action;
+                break;
+
+
+        }
+    }
 }
