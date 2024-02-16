@@ -12,7 +12,7 @@ using UnityEngine.EventSystems;
 
 // 2) Text 사용 시 SerializeField로 하나하나 변수 선언 후 인스펙터에서 연결하는 상황
 
-public class UI_Button : UI_Base
+public class UI_Button : UI_Popup
 {
 #if UI인자전달예시
     //[SerializeField]
@@ -43,6 +43,19 @@ public class UI_Button : UI_Base
 
     private void Start()
     {
+        Init();
+#if AddUIEvent메서드로이동
+        GameObject go =  GetImage((int)Images.ItemIcon).gameObject;
+        UI_EventHandler evt = go.GetComponent<UI_EventHandler>();//컴포넌트 수동 연결 시. --> 이벤트핸들러를 GetComponent로 추출
+        evt.OnDragHandler += ((PointerEventData data) => { evt.gameObject.transform.position = data.position; });//UI_EventHandler에서 Invoke로 대리자를 호출했으니, 람다식으로 작성
+       
+#endif
+     }
+
+    public override void Init()
+    {
+        base.Init();//Init()의 부모 호출
+
         Bind<Button>(typeof(Buttons));//Buttons열거체 형식을 넘기겠다고 호출-->Buttons 열거체 타입의 Button이라는 컴포넌트를 찾아 해당하는 것을 매핑한다
         Bind<TextMeshProUGUI>(typeof(Texts));//Texts열거체 형식을 넘기겠다고 호출
         Bind<GameObject>(typeof(GameObjects));
@@ -50,21 +63,16 @@ public class UI_Button : UI_Base
         Bind<Image>(typeof(Images));//이미지 타입의 images 바인딩
 
         //Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind Test";//TextMeshPro를 사용하므로, Text타입 인자는 인스펙터에서 넘겨줄 수 없음-->TMPro 네임스페이스를 선언하고, 텍스트를 TextMeshProUGUI  타입으로 선언해야 함.
-       // GetText((int)Texts.ScoreText).text = "BindTest";
+        // GetText((int)Texts.ScoreText).text = "BindTest";
 
         GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);//Hierarchy에서 드래그드롭으로 UI이벤트를 연결하지 않고, 한 줄에 자동 처리되도록 함
 
         GameObject go = GetImage((int)Images.ItemIcon).gameObject;
         AddUIEvent(go, (PointerEventData data) => { go.gameObject.transform.position = data.position; }, Define.UIEvent.Drag);//드래그이벤트 구현
 
-
-#if AddUIEvent메서드로이동
-        GameObject go =  GetImage((int)Images.ItemIcon).gameObject;
-        UI_EventHandler evt = go.GetComponent<UI_EventHandler>();//컴포넌트 수동 연결 시. --> 이벤트핸들러를 GetComponent로 추출
-        evt.OnDragHandler += ((PointerEventData data) => { evt.gameObject.transform.position = data.position; });//UI_EventHandler에서 Invoke로 대리자를 호출했으니, 람다식으로 작성
-       
-#endif
     }
+
+
 
     int _score = 0;
 
