@@ -6,8 +6,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크립트(UI_Button에서 작성했던 내용 이전)
+public abstract class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크립트(UI_Button에서 작성했던 내용 이전)
 {
+    public abstract void Init();// UI_Base를 상속받은 스크립트에서 Init()을 쓸 수 있게 abstract로 공통 정의
+
+
+
     //여러가지 Type을 넣었으니 Dictionary로 관리. Button타입, Text타입을 유니티엔진 오브젝트의 리스트로 관리함
     Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 
@@ -34,7 +38,7 @@ public class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크립트(UI_B
         }
     }
 
-    T Get<T>(int idx) where T : UnityEngine.Object//Bind로 찾은 오브젝트를 꺼내서 쓰는 Get함수
+  public  T Get<T>(int idx) where T : UnityEngine.Object//Bind로 찾은 오브젝트를 꺼내서 쓰는 Get함수
     {
         UnityEngine.Object[] objects = null;
         //TryGetValue를 사용, key값은 T의 타입, value는 object배열
