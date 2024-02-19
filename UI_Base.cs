@@ -47,14 +47,13 @@ public abstract class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크
         return objects[idx] as T;//찾았다면 objects 인덱스번호 추출 후 T로 캐스팅(objects의 타입이 UnityEngine.Object이므로)
     }
 
-    //버튼, 텍스트, 이미지 등이 쓰일 때 마다 Get 선언을 해야하는 번거로움을 해결하기 위해, 바로 Get을 사용할 수 있도록 만들어줌
+    //버튼, 텍스트, 이미지 ,게임오브젝트 등이 쓰일 때 마다 Get 선언을 해야하는 번거로움을 해결하기 위해, 바로 Get을 사용할 수 있도록 만들어줌
     protected TextMeshProUGUI GetText(int idx) { return Get<TextMeshProUGUI>(idx); }
-
     protected Button GetButton(int idx) { return Get<Button>(idx); }
-
     protected Image GetImage(int idx) { return Get<Image>(idx); }
+    protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
 
-    public static void AddUIEvent(GameObject go, Action<PointerEventData>action, Define.UIEvent type = Define.UIEvent.Click)//UI이벤트를 추가하는 함수 선언-->게임오브젝트, 콜백으로 연동할 Action함수, 어떤 UIEvent에 적용할 것인지를 인자로 지정(기본 click)
+    public static void BindEvent(GameObject go, Action<PointerEventData>action, Define.UIEvent type = Define.UIEvent.Click)//UI이벤트를 추가하는 함수 선언-->게임오브젝트, 콜백으로 연동할 Action함수, 어떤 UIEvent에 적용할 것인지를 인자로 지정(기본 click)
     {
         // 어떤 오브젝트에게 이벤트를 붙일지 모르니, 오브젝트에 UI_EventHandler가 없다면 추가해주는 구문이 필요
         UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
@@ -69,8 +68,6 @@ public abstract class UI_Base : MonoBehaviour//UI 매핑 타입의 베이스가 되는 스크
                 evt.OnDragHandler -= action;
                 evt.OnDragHandler += action;
                 break;
-
-
         }
     }
 }

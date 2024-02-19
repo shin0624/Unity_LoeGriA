@@ -10,7 +10,7 @@ public class ResourceManager
         return Resources.Load<T>(path);
     }
 
-    public GameObject Instantiate(string path, Transform parent = null)
+    public GameObject Instantiate(string path, Transform parent = null)//프리팹을 로드하는 메서드
     {
         GameObject prefab = Load<GameObject>($"Prefabs/{path}");//Prefabs폴더 내에 있는 프리팹을 가져오도록 지정
         //ResourceManager를 이용한 Instantiate()를 선언할 때는 Prefabs/ 를 안붙여도 될 것.
@@ -20,7 +20,12 @@ public class ResourceManager
             return null;
         }
     
-        return Object.Instantiate(prefab, parent);//프리팹과 프리팹을 생성해서 붙일 parent를 리턴
+        GameObject go = Object.Instantiate(prefab, parent);
+        int index = go.name.IndexOf("(Clone)");
+        if(index>0)
+            go.name = go.name.Substring(0, index);//Substring(0, index) : 0번 ~ index 번 까지의 문자열을 자른다.
+
+        return go;
     }
 
     public void Destroy(GameObject go)

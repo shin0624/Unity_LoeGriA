@@ -45,6 +45,19 @@ public class UIManager
             
     }
 
+
+    public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base// inven, Scene 이외의 서브아이템 생성 시 접근하는 메서드
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;//만약 name을 넣지 않는다면 T의 이름을 그대로 사용하도록, 넣어준 타입 이름을 그대로 사용할 수 있는 typeof(T).Name을 사용
+        GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
+
+        if (parent != null)
+            go.transform.SetParent(parent);
+
+        return go.GetOrAddComponent<T>();
+    }
+
     public T ShowPopupUI<T>(string name = null) where T : UI_Popup
     //name에는 Asset/Resources/UI/Popup에 있는 프리팹의 이름을 건네줌, T에는 Script/UI/Popup에 있는 UI_Button 스크립트를 건네줌
     {

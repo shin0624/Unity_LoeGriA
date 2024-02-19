@@ -29,16 +29,23 @@ public class UI_Inven : UI_Scene
         
         for(int i=0; i<8; i++)//채우고자 하는 아이템 개수만큼 반복하며
         {
-            //UI_Inven_Item을 생성해서 UI_Inven/GridPanel 프리팹의 자식으로 붙여주어야 함.
-            GameObject item = Managers.Resource.Instantiate("UI/Scene/UI_Inven_Item");//Instantiate를 사용하여 아이템 프리팹을 생성 -->지정 경로에 있는 동일명 프리팹을 이용하여 아이템을 생성할 수 있다.
-            item.transform.SetParent(gridPanel.transform);//위에서 생성한 아이템 프리팹을 SetParent()를 이용하여 gridPanel의 자식으로 지정한다.
+            Managers.UI.MakeSubItem<UI_Inven_Item>();
 
-            UI_Inven_Item invenItem =   Util.GetOrAddComponent<UI_Inven_Item>(item); //-->또는 프리팹 인스펙터에서 UI_Inven스크립트를 컴포넌트로 추가해도 됨 -->해당 구문 또는 컴포넌트 추가까지 완료해야 유니티 실행 시 ui가 출력됨
+            //UI_Inven_Item을 생성해서 UI_Inven/GridPanel 프리팹의 자식으로 붙여주어야 함.
+            //GameObject item = Managers.Resource.Instantiate("UI/Scene/UI_Inven_Item");//Instantiate를 사용하여 아이템 프리팹을 생성 -->지정 경로에 있는 동일명 프리팹을 이용하여 아이템을 생성할 수 있다.
+          
+            GameObject item = Managers.UI.MakeSubItem<UI_Inven_Item>(gridPanel.transform).gameObject;
+
+            //item.transform.SetParent(gridPanel.transform);//위에서 생성한 아이템 프리팹을 SetParent()를 이용하여 gridPanel의 자식으로 지정한다.
+            //--> MakeSubItem의 매개변수로 부모 트랜스폼을 추가했으므로 위 구문은 삭제
+
+            UI_Inven_Item invenItem =  item.GetOrAddComponent<UI_Inven_Item>(); //-->또는 프리팹 인스펙터에서 UI_Inven스크립트를 컴포넌트로 추가해도 됨 -->해당 구문 또는 컴포넌트 추가까지 완료해야 유니티 실행 시 ui가 출력됨
             invenItem.SetInfo($"무기{i}번");
-        
+            //-->GetOrAddComponent를 GameObject 객체에서 호출하도록 변경-->해당 메서드를 Extension Method로 만들어 GameObject객체에서 접근 가능
         
         }
     }
+
 
   
 }

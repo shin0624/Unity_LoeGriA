@@ -44,7 +44,7 @@ public class UI_Button : UI_Popup
     private void Start()
     {
         Init();
-#if AddUIEvent메서드로이동
+#if BindEvent메서드로이동
         GameObject go =  GetImage((int)Images.ItemIcon).gameObject;
         UI_EventHandler evt = go.GetComponent<UI_EventHandler>();//컴포넌트 수동 연결 시. --> 이벤트핸들러를 GetComponent로 추출
         evt.OnDragHandler += ((PointerEventData data) => { evt.gameObject.transform.position = data.position; });//UI_EventHandler에서 Invoke로 대리자를 호출했으니, 람다식으로 작성
@@ -65,10 +65,10 @@ public class UI_Button : UI_Popup
         //Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind Test";//TextMeshPro를 사용하므로, Text타입 인자는 인스펙터에서 넘겨줄 수 없음-->TMPro 네임스페이스를 선언하고, 텍스트를 TextMeshProUGUI  타입으로 선언해야 함.
         // GetText((int)Texts.ScoreText).text = "BindTest";
 
-        GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);//Hierarchy에서 드래그드롭으로 UI이벤트를 연결하지 않고, 한 줄에 자동 처리되도록 함
+        GetButton((int)Buttons.PointButton).gameObject.BindEvent(OnButtonClicked);//Hierarchy에서 드래그드롭으로 UI이벤트를 연결하지 않고, 한 줄에 자동 처리되도록 함
 
         GameObject go = GetImage((int)Images.ItemIcon).gameObject;
-        AddUIEvent(go, (PointerEventData data) => { go.gameObject.transform.position = data.position; }, Define.UIEvent.Drag);//드래그이벤트 구현
+        BindEvent(go, (PointerEventData data) => { go.gameObject.transform.position = data.position; }, Define.UIEvent.Drag);//드래그이벤트 구현
 
     }
 

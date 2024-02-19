@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class UI_Popup : UI_Base
 {
-    public virtual void Init()//Start()에서 소팅 요청 시 실행 x
+    public override void Init()//Start()에서 소팅 요청 시 실행 x
     {
         Managers.UI.SetCanvas(gameObject, true);//팝업 -> 소팅 요청
     }
