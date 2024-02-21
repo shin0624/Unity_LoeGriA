@@ -12,12 +12,15 @@ public class Managers : MonoBehaviour
     InputManager _input = new InputManager();//인풋매니저 생성자 선언
     public static InputManager Input { get { return Instance._input; } }
 
-    UIManager ui = new UIManager();
-
     ResourceManager _resource = new ResourceManager();//리소스매니저 생성자 선언
     public static ResourceManager Resource { get { return Instance._resource; } }
 
-    public static UIManager UI  { get { return Instance.ui; } }//UI를 관리할 UIManager 연결
+    SceneManagerEX _scene = new SceneManagerEX();
+    public static SceneManagerEX Scene { get { return Instance._scene; } }
+
+
+    UIManager ui = new UIManager();
+    public static UIManager UI { get { return Instance.ui; } }//UI를 관리할 UIManager 연결
 
     //GetInstance()를 property형식으로 바꾸고자 하면
     //public static Managers Instance { get{Init(); return s_instance;} } 로 바꾼 후 Player에서 Managers mg = Mangers.Instance 형식으로 호출하면 됨
