@@ -9,7 +9,7 @@ public class SceneManagerEX
 
     public void LoadScene(Define.Scene type)//원본(SceneManager) LoadScene에서는 string을 인자로 받았으나, Define에서 enum타입으로 Scene목록을 관리하고 있으니 enum타입을 이용
     {
-        CurrentScene.Clear();
+        Managers.Clear();//불필요한 메모리 클리어
         SceneManager.LoadScene(GetSceneName(type));
         //-->LoadScene 실행 시 Clear로 현재 씬 수행내용 삭제 후 다음 Scene으로 넘어감
     }
@@ -21,4 +21,8 @@ public class SceneManagerEX
         return name;
     }
 
+    public void Clear()
+    {
+        CurrentScene.Clear();
+    }
 }

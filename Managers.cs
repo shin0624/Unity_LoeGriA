@@ -18,6 +18,8 @@ public class Managers : MonoBehaviour
     SceneManagerEX _scene = new SceneManagerEX();
     public static SceneManagerEX Scene { get { return Instance._scene; } }
 
+    SoundManager _sound  =new SoundManager();
+    public static SoundManager Sound { get { return Instance._sound; } }
 
     UIManager ui = new UIManager();
     public static UIManager UI { get { return Instance.ui; } }//UI를 관리할 UIManager 연결
@@ -59,7 +61,17 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);//게임 오브젝트는 마음대로 삭제되어서는 안되기 때문에 선언.
             s_instance = go.GetComponent<Managers>();
-             //만약 @Manager오브젝트를 발견했다면 Managers 스크립트를 가져온다
+            //만약 @Manager오브젝트를 발견했다면 Managers 스크립트를 가져온다
+
+            s_instance._sound.Init();
         }
+    }
+
+   public static void Clear()
+    {
+        Sound.Clear();
+        Input.Clear();
+        Scene.Clear();
+        UI.Clear();
     }
 }

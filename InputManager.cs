@@ -39,4 +39,10 @@ public class InputManager//싱글톤으로 구현된 Managers가 이미 있으므로 InputManag
         }
         //만약 Dragged상태를 추가하고자 한다면 GetMouseButton(0)상태가 일정시간 지속되면 Dragged상태로 변환
     }
+
+    public void Clear()
+    {
+        KeyAction = null;
+        MouseAction = null;
+    }
 }

@@ -124,4 +124,10 @@ public class UIManager
             ClosePopupUI();
     }
   
+    public void Clear()//UI_Popup과 UI_Scene은 특정 씬에 종속되므로, 클리어 필요
+    {
+        CloseAllPopupUI();
+        _sceneUI= null;
+
+    }
 }
