@@ -15,7 +15,7 @@ public class InputManager//싱글톤으로 구현된 Managers가 이미 있으므로 InputManag
     {
         if (EventSystem.current.IsPointerOverGameObject())//UI버튼 클릭 여부 판단을 위해 EventSystem을 사용한 조건 추가
             return;//UI가 클릭된 상황이면 바로 리턴(게임 화면 내 UI버튼 클릭 시 캐릭터 이동으로 간주되지 않도록)
-       
+
 
         if (Input.anyKey && KeyAction != null)
         {
@@ -32,7 +32,7 @@ public class InputManager//싱글톤으로 구현된 Managers가 이미 있으므로 InputManag
             else
             {
                 if (_pressed)//기존에 한번이라도 Press되었다면 Click이벤트 발생
-                     MouseAction.Invoke(Define.MouseEvent.Click);
+                    MouseAction.Invoke(Define.MouseEvent.Click);
                 _pressed = false;
             }
 
