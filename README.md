@@ -20,14 +20,17 @@
   ##  Controller
     - Player Controller : WASD- 상하좌우 이동
 
-    -Camera Controller : 카메라 시점은 QuaterView를 정의. Player 기준 거리 방향벡터_delta를 선언하여 Player Position에 더해 카메라 위치를 설정하고, LookAt()함수로 Player 좌표를 주시하도록 함.
+    -Camera Controller : 카메라 시점은 QuaterView를 정의. Player 기준 거리 방향벡터_delta를 선언하여 
+                         Player Position에 더해 카메라 위치를 설정하고, LookAt()함수로 Player 좌표를 주시하도록 함.
         + 카메라 시야를 벽 등의 오브젝트가 막고있을 때 대처법 : 
         a. RaycastHit hit를 선언
         b. Player와 오브젝트 간 거리 dist를 [Raycast의 히트포인트 - 플레이어 위치] 방향벡터에 magnitude를 적용하여 방향벡터 크기를 구함.
         c.  _delta의 normalized된 방향 * dist *상수값을 카메라 위치로 반환한다. 즉, 방향벡터보다 조금 더 앞으로 당겨서 Player를 비추게 할 것.
+        
   ## Manager  
     -Managers : 최상위 스크립트. 각 매니저 스크립트의 인스턴스를 선언, 사용 시 널체크 필요. 
-        + Init() 함수 선언 : Hirerarchy에 Managers를 위치시켜 관리해야하기 때문에, GameObject.Find()로 오브젝트 탐색, null이라면 Managers 오브젝트를 새로 생성 후 AddComponent<Managers>() 수행.
+        + Init() 함수 선언 : Hirerarchy에 Managers를 위치시켜 관리해야하기 때문에, GameObject.Find()로 오브젝트 탐색, 
+                             null이라면 Managers 오브젝트를 새로 생성 후 AddComponent<Managers>() 수행.
         + Clear() 함수 선언 : 사운드, 입력, 씬, UI 스크립트에서 사용할 반환함수
 
     - Input Manager : 마우스 입력을 받아 이벤트 처리
@@ -53,7 +56,8 @@
     - Scene ManagerEX : 기존 SceneManager를 확장한 Scene 관리
          + CurrentScene - 현재 실행 중인 Scene의 BaseScene컴포넌트 반환
          + LoadScene - Define에 정의된 Scene 열거형을 받아 해당 Scene 로드
-         + GetSceneName - 해당 Scene 이름 반환. Reflection(System.Enum.GetName)을 이용하여 지정된 Enum타입과 해당 값으로부터 string을 가져와 LoadScene에 전달
+         + GetSceneName - 해당 Scene 이름 반환. Reflection(System.Enum.GetName)을 이용하여 지정된 Enum타입과 
+                          해당 값으로부터 string을 가져와 LoadScene에 전달
 
   ## Scene
     - Login Scene : 
@@ -72,9 +76,11 @@
   ## Utils
     - Utils : 기능성 함수 관리.
         + GetOrAddComponent<T>(GameObject go) - 특정 타입 컴포넌트를 가져오거나, 없는 경우 해당 컴포넌트 추가 후 반환.
-        + FindChild(GameObject go, string name = null, bool recursive = false) -  GameObject의 자식 중에서 특정 이름의 자식을 찾거나, 특정 타입의 컴포넌트를 갖는 자식을 찾음.
-        recursive를 사용하여 재귀적으로 자식을 검색할지 여부를 지정 가능.
-        재귀적으로 자식을 검색하는 경우 해당 GameObject의 모든 하위 자식까지 검색.
+        
+        + FindChild(GameObject go, string name = null, bool recursive = false) -  GameObject의 자식 중에서 특정 이름의 자식을 찾거나, 
+          특정 타입의 컴포넌트를 갖는 자식을 찾음. recursive를 사용하여 재귀적으로 자식을 검색할지 여부를 지정 가능.
+          재귀적으로 자식을 검색하는 경우 해당 GameObject의 모든 하위 자식까지 검색.
+          
         + FindChild<T>(GameObject go, string name = null, bool recursive = false) -  FindChild 메서드를 오버로드, 이름 대신 컴포넌트 타입에 따라 자식을 찾음
 
     - StatData : 
@@ -83,4 +89,5 @@
 
     - Extension : Extension Method 사용으로 기존 클래스를 수정하지 않고 새로운 메서드를 추가하기 위해 작성.
         + GetOrAddComponent<T>(this GameObject go) - 특정 타입의 컴포넌트를 가져오거나 추가
-        + BindEvent(this GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click) -  UI_Base의 BindEvent를 호출하여 UI 이벤트를 바인딩.  UI 요소에 대한 이벤트 핸들러를 추가할 때 사용. 매개변수로 이벤트 핸들러를 나타내는 Action<PointerEventData>, UI 이벤트 타입을 나타내는 Define.UIEvent를 전달
+        + BindEvent - UI_Base의 BindEvent를 호출하여 UI 이벤트를 바인딩.  UI 요소에 대한 이벤트 핸들러를 추가할 때 사용.
+                      매개변수로 이벤트 핸들러를 나타내는 Action<PointerEventData>, UI 이벤트 타입을 나타내는 Define.UIEvent를 전달
