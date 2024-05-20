@@ -8,18 +8,19 @@ public class PlayerCotroller : MonoBehaviour
     [SerializeField]
     float _speed = 10.0f;//접근지정자를 public으로 하거나 SerializeField를 사용하면 인스펙터에서 속도값을 수정 가능
                          // float _yAngle = 0.0f;//로테이션 조작을 위한 변수 생성
-
-    //bool _moveToDest = false;//_desPos 사용 여부(목적지로 이동하는지) --->PlayerState로 관리할 것이므로 주석처리
+    bool _moveToDest = false;//_desPos 사용 여부(목적지로 이동하는지) --->PlayerState로 관리할 것이므로 주석처리
     Vector3 _destPos;//목적지
-
    // float wait_run_ratio = 0; --->Unity 에니메이터 상에서 State Machine에 정의한 Transition대로 애니메이션을 구현하기 위해 wait_run_ratio, WAIT_RUN은 삭제
+
+    [Header("FPV")]
+    public float moveSpeed;
+    Rigidbody rb;
 
     public enum PlayerState //Player의 상태를 관리할 PlayerState 열거체
     {
         Die,
         Moving,
         Idle
-
     }
 
     PlayerState _state = PlayerState.Idle;
@@ -89,20 +90,23 @@ public class PlayerCotroller : MonoBehaviour
 
     void Start()
     {
-        //Managers.Input.KeyAction -= OnKeyboard;//중복 호출을 방지하기 위한 마이너스 --->PlayerState로 관리할 것이므로 주석처리
-        // Managers.Input.KeyAction += OnKeyboard;
+        Managers.Input.KeyAction -= OnKeyboard;//중복 호출을 방지하기 위한 마이너스 --->PlayerState로 관리할 것이므로 주석처리
+        Managers.Input.KeyAction += OnKeyboard;
 
-        Managers.Input.MouseAction -= OnMouseClicked;
-        Managers.Input.MouseAction += OnMouseClicked;
+       // Managers.Input.MouseAction -= OnMouseClicked;
+        //Managers.Input.MouseAction += OnMouseClicked;
+
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
 
         //게임 시작 이후 ui버튼을 불러오기 위해 추가
         // Managers.Resource.Instantiate("UI/UI_Button");//Instantiate를 사용하여 UI폴더 내 UI_Button 프리팹을 로드
 
-        //Temp
-       
-            UI_Button ui = Managers.UI.ShowPopupUI<UI_Button>();//UI버튼 호출
-
+        //UI버튼 호출 예시
+        // UI_Button ui = Managers.UI.ShowPopupUI<UI_Button>();
         //Tip) Hierarchy상에서 UI버튼 팝업 블로커 설정 : UI버튼 프리팹에서 image 생성 후 투명하게(alpha=0) 화면 전체를 채우게 적용 후 Raycast Target 체크--> 블로커를 맨 위 순서로 옮김--> 투명image가 Ray를 먼저 받게되어 order순서를 벗어나는 팝업은 선택되지 게 됨.
+
+
     }
 
     // 업데이트 메서드는 프레임 당 한번씩, 즉 1/60초마다 한번씩 실행되므로
@@ -204,6 +208,7 @@ public class PlayerCotroller : MonoBehaviour
                 UpdateIdle(); break;
 
         }
+        OnKeyboard();
     }
 
     void OnMouseClicked(Define.MouseEvent evt)//InputManager 스크립트에서 Action<Define.MouseEvent> MouseAction 으로 선언하였으므로, 마우스이벤트 객체를 인자로 넘겨줌
@@ -263,5 +268,46 @@ public class PlayerCotroller : MonoBehaviour
     }
 #endif
 
+    void OnKeyboard()
+    {
+#if old
+        if (Input.GetKey(KeyCode.W))//앞     
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.1f);
+            // transform.rotation = Quaternion.LookRotation(Vector3.forward);
+            transform.position += Vector3.forward * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.S))//뒤
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.1f);
+            transform.position += Vector3.back * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.A))//좌 
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.1f);
+            transform.position += Vector3.left * Time.deltaTime * _speed;
+        }
+        if (Input.GetKey(KeyCode.D))//우    
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.1f);
+            transform.position += Vector3.right * Time.deltaTime * _speed;
+        }
 
+        _moveToDest = false;//키보드로 조작할 때는 마우스 클릭으로 이동처럼 destPos를 정하고 움직이지 않으므로 false.
+#endif
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        Vector3 movevec = transform.forward * v + transform.right * h;
+        rb.MovePosition(rb.position + movevec.normalized * moveSpeed * Time.fixedDeltaTime);
+
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", movevec.magnitude);
+
+        // 마우스 입력에 따른 회전
+        float mouseX = Input.GetAxis("Mouse X") * moveSpeed * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * moveSpeed * Time.deltaTime;
+        transform.Rotate(Vector3.up * mouseX);
+
+    }
 }
