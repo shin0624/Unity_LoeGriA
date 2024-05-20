@@ -1,5 +1,9 @@
 # 3D AdventureExploration
     Unity Engine을 사용한 PC기반 3D 오픈월드 탐험
+# InGame View
+![explo1](https://github.com/shin0624/Unity_3D_AdventureExploration/assets/91828379/415e6f6b-a4b7-4496-b191-30866a8b57bc)
+
+![explo2](https://github.com/shin0624/Unity_3D_AdventureExploration/assets/91828379/956ce5d9-e2a3-4c71-b364-fe1ae84830a7)
 
 # 1. 개발 기간
     2023.12 ~ 2024.03
