@@ -9,10 +9,9 @@ public abstract class BaseScene : MonoBehaviour
 
     public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;//get은 public으로 열어두고, set은 protected로 막아둔다
 
-
-    void Start()
+    void Awake()
     {
-        
+        Init();
     }
 
     protected virtual void Init()

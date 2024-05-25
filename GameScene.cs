@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+#if UNITY_EDITOR
+
+using UnityEditor;
+#endif
 
 public class GameScene : BaseScene
 // "Game" 씬에서 사용할 스크립트
@@ -27,17 +31,43 @@ public class GameScene : BaseScene
 
         }
     }
+
+     IEnumerator ExplodeAfterSeconds(float seconds)//coroutine응용-> 일정 초 후에 발동하는 스킬
+    {
+        Debug.Log("explode endter");
+        yield return new WaitForSeconds(seconds);//일정시간(second) 만큼 대기 후 리턴.-->StartCoroutine(실행할 스킬, 대기시간)실행.
+        Debug.Log("explode execute!");
+        
+    }
 #endif
+
+    private GameObject pauseMenu;
+    private bool isPaused = false;
+
     protected override void Init()
     {
         base.Init();
-
         SceneType = Define.Scene.Game;
 
-        Managers.UI.ShowSceneUI<UI_Inven>();//게임 시작 시 기본 UI를 불러오는 코드 등, 시작 시 구현될 액션은 이곳에 작성
+        // UI 오브젝트를 찾고 비활성화합니다.
+        pauseMenu = GameObject.Find("UI");
+        if (pauseMenu != null)
+        {
+            pauseMenu.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("Pause menu not found! Make sure there is a GameObject named 'UI' in the scene.");
+        }
 
-        StartCoroutine("ExplodeAfterSeconds", 4.0f);//원하는 코루틴을 실행하는 함수. 4초 후에 아래 스킬 발동
-                                                    //만약 코루틴을 취소하고자 하면 StartCoroutine을 Coroutine타입의 co로 만들고 StopCoroutin(co)를 사용하면 됨.
+
+
+        //Managers.UI.ShowSceneUI<UI_Inven>();//게임 시작 시 기본 UI를 불러오는 코드 등, 시작 시 구현될 액션은 이곳에 작성
+
+        // StartCoroutine("ExplodeAfterSeconds", 4.0f);//원하는 코루틴을 실행하는 함수. 4초 후에 아래 스킬 발동
+        //만약 코루틴을 취소하고자 하면 StartCoroutine을 Coroutine타입의 co로 만들고 StopCoroutin(co)를 사용하면 됨.
+
+
 
 #if coroutineTest
         CoroutineTest test = new CoroutineTest();
@@ -67,17 +97,60 @@ public class GameScene : BaseScene
     
 #endif
     }
-    IEnumerator ExplodeAfterSeconds(float seconds)//coroutine응용-> 일정 초 후에 발동하는 스킬
+
+    private void Update()
     {
-        Debug.Log("explode endter");
-        yield return new WaitForSeconds(seconds);//일정시간(second) 만큼 대기 후 리턴.-->StartCoroutine(실행할 스킬, 대기시간)실행.
-        Debug.Log("explode execute!");
-        
+        // Esc 키 입력 처리
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!isPaused)
+            {
+                PauseGame();
+            }
+            else
+            {
+                ExitGame();
+            }
+        }
+
+        // Space 키 입력 처리
+        if (isPaused && Input.GetKeyDown(KeyCode.Space))
+        {
+            ResumeGame();
+        }
     }
 
+    private void PauseGame()
+    {
+        if (pauseMenu != null)
+        {
+            isPaused = true;
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0f; // 게임을 일시 정지합니다.
+        }
+    }
+
+    private void ResumeGame()
+    {
+        if (pauseMenu != null)
+        {
+            isPaused = false;
+            pauseMenu.SetActive(false);
+            Time.timeScale = 1f; // 게임을 재개합니다.
+        }
+    }
+
+    private void ExitGame()
+    {
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 
     public override void Clear()
     {
-        
+        Debug.Log("Game End");
     }
 }

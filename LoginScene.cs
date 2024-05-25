@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,12 +12,15 @@ public class LoginScene : BaseScene
     {
         base.Init();
         SceneType = Define.Scene.Login;
+
+       
+            
     }
 
     private void Update()
     {
         //특정 키 입력 시 다음 씬으로 이동
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             // SceneManager.LoadScene("Game");//LoadScene : 기존에 켜진 Scene을 날리고 지정된 Scene을 차례로 로딩-->씬 규모와 대기시간이 비례함
 

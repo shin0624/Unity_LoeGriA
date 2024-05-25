@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    public Define.CameraMode _mode = Define.CameraMode.QuarterView;//Define에서 정의한 카메라모드 중 쿼터뷰를 기본으로 적용
+    public Define.CameraMode _mode = Define.CameraMode.FirstPersonView;//Define에서 정의한 카메라모드 중 쿼터뷰를 기본으로 적용
     
     [SerializeField]
     public Vector3 _delta = new Vector3(0.0f, 2.0f, -10.0f);//Player 기준으로 얼마나 떨어져있는지에 대한 방향벡터
