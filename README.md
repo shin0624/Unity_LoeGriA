@@ -43,6 +43,13 @@
     - 비동기 방식의 씬 로드를 사용하여 각 씬 전환 시 로딩 화면을 표시
 
 # 6. 플레이 미리보기
+    [ 오전 ]
+    ![LOADING_1](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/d4c646b3-c2e1-46ba-b088-26d062f83712)
 
+    [ 황혼 ]
+    ![LOADING_2](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/bd88aa10-254a-42b6-89d1-286f972b2b75)
+
+    [ 밤 ]
+    ![LOADING_3](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/da9ce23f-1036-4626-aa3c-b9d08a9e022b)
     
     
