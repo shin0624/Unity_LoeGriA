@@ -1,4 +1,5 @@
 # LoeGriA
+![Side](https://github.com/user-attachments/assets/22b70a6f-4e14-4f79-b026-b75cee54123f)
     PC기반 오픈월드 RPG 게임입니다.
     총 2개의 대륙으로 구성된 맵을 오가며 사냥과 여행을 즐기는 것이 주요 컨텐츠입니다.
     - 시작 대륙 : LoeGriA
