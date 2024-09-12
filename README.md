@@ -7,16 +7,16 @@
     ****개발 진행중*****
     
 # InGame View
-[ 시작 화면 ]
+## 시작화면
 ![StartScene](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/ef71ca8e-3130-4f9c-b8a2-1db692361c34)
 
-[ 도움말 화면 ]
+## 도움말 화면
 ![Options](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/1e56c2d2-40bf-4620-9fb0-664ea752459e)
 
-[ 라이센스 표기 화면 ]
+## 라이센스 표기 화면
 ![Licenese](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/4f4fbce6-d9d2-4b34-b527-4171419272d7)
 
-[ 로딩 화면 ]
+## 로딩 화면
 ![Loading](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/929e10cd-4565-4a1e-bc5f-a4d08e95af94)
 
 # 1. 개발 기간
@@ -44,13 +44,13 @@
     - 비동기 방식의 씬 로드를 사용하여 각 씬 전환 시 로딩 화면을 표시
 
 # 6. 플레이 미리보기
-    [ 오전 ]
+## 오전
 ![LOADING_1](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/d4c646b3-c2e1-46ba-b088-26d062f83712)
 
-    [ 황혼 ]
+## 황혼
 ![LOADING_2](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/bd88aa10-254a-42b6-89d1-286f972b2b75)
 
-    [ 밤 ]
+## 밤
 ![LOADING_3](https://github.com/shin0624/Unity_LoeGriA/assets/91828379/da9ce23f-1036-4626-aa3c-b9d08a9e022b)
     
     
